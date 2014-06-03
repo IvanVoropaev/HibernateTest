@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 03.06.2014 16:40:41 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="students.entity">
+    <class name="Profession" table="PROFESSION">
+        <id name="professionId" type="java.lang.Long">
+            <column name="PROFESSION_ID" />
+            <generator class="native" />
+        </id>
+        <property name="professionName" type="java.lang.String">
+            <column name="PROFESSION_NAME" />
+        </property>
+    </class>
+</hibernate-mapping>
