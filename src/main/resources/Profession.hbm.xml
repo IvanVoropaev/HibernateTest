@@ -4,12 +4,16 @@
 <!-- Generated 03.06.2014 16:40:41 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping package="students.entity">
     <class name="Profession" table="PROFESSION">
-        <id name="professionId" type="java.lang.Long">
+        <id name="professionId">
             <column name="PROFESSION_ID" />
             <generator class="native" />
         </id>
         <property name="professionName" type="java.lang.String">
             <column name="PROFESSION_NAME" />
         </property>
+        <set name="subjectList" inverse="true" table="SPECIALITY_SUBJECT">
+        	<key column="PRIFESSION_ID"></key>
+        	<many-to-many column="SUBJECT_ID" class="students.entity.Subject"></many-to-many>
+        </set>
     </class>
 </hibernate-mapping>
