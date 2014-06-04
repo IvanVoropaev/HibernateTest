@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 04.06.2014 11:26:28 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="students.entity.ApplicantResult" table="APPLICANT_RESULT">
+        <id name="applicantResultId" type="java.lang.Long">
+            <column name="APPLICANT_RESULT_ID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="applicant" class="students.entity.Applicant" fetch="join">
+            <column name="APPLICANT_ID" />
+        </many-to-one>
+        <many-to-one name="subject" class="students.entity.Subject" fetch="join">
+            <column name="SUBJECT_ID" />
+        </many-to-one>
+        <property name="mark" type="java.lang.Integer">
+            <column name="MARK" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 04.06.2014 11:58:20 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="students.entity.Subject" table="SUBJECT">
+        <id name="subjectId" type="java.lang.Long">
+            <column name="SUBJECT_ID" />
+            <generator class="native" />
+        </id>
+        <property name="subjectName" type="java.lang.String">
+            <column name="SUBJECT_NAME" />
+        </property>
+        <set name="professionList" table="SPECIALITY_SUBJECT" inverse="false" lazy="true">
+            <key>
+                <column name="SUBJECT_ID" />
+            </key>
+            <many-to-many class="students.entity.Profession" column="PROFESSION_ID"/>
+        </set>
+    </class>
+</hibernate-mapping>

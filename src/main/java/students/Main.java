@@ -1,57 +1,102 @@
 package students;
 
-import java.util.List;
-
-import org.hibernate.Session;
-
 import students.entity.Profession;
-import students.utils.HibernateUtil;
-
-public class Main {
-	
-	//добавление новой записи в таблицу PROFESSION
-	private void addProfession(String name) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		Profession prof = new Profession();
-		prof.setProfessionName(name);;
-		session.save(prof);
-		session.getTransaction().commit();
-	}
-	
-	//возвращение списка профессий
-	private List<Profession> listProfession() {
-		String query = "from Profession order by professionName";
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		List<Profession> result = session.createQuery(query).list();
-		session.getTransaction().commit();
-		return result;
-	}
-	
-	//удаление записи
-	private void deleteEntry(Object o) {
-		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-		session.beginTransaction();
-		session.delete(o);
-		session.flush();
-		session.getTransaction().commit();
-	}
-	
-	public static void main(String[] args) {
-		Main main = new Main();
-		
-		main.addProfession("Profession_1");
-        main.addProfession("Profession_2");
-        main.addProfession("Profession_3");
-        main.addProfession("Profession_4");
-        main.addProfession("Profession_5");
-        
-        List<Profession> result = main.listProfession();
-        
-        for (Profession r : result)
-        	System.out.println(r.getProfessionId() + ": " + r.getProfessionName());
-        	//main.deleteEntry(r);
-	}
+import java.util.List;
+import students.dao.StudentDAO;
+import students.entity.Applicant;
+import students.entity.Subject;
  
+public class Main {
+ 
+    public static void main(String[] args) {
+        StudentDAO dao = new StudentDAO();
+ 
+        // Добавление новых предметов
+        Subject subject = new Subject();
+        subject.setSubjectName("Mathematics");
+        dao.addSubject(subject);
+        subject = new Subject();
+        subject.setSubjectName("Chemistry");
+        dao.addSubject(subject);
+        subject = new Subject();
+        subject.setSubjectName("Logic");
+        dao.addSubject(subject);
+ 
+        System.out.println("List of SUBJECTS");
+        System.out.println("----------------");
+        List<Subject> sbList = dao.findSubject();
+        // В списке вы увидите, что предметы пока не привязаны к профессиям - количество = 0
+        for (Subject a : sbList) {
+            System.out.println(a.getSubjectId() + ":" + a.getSubjectName() +
+                    ". Number of profession:" + a.getProfessionList().size());
+        }
+ 
+        // Теперь добавим профессии
+        Profession profession = new Profession();
+        profession.setProfessionName("Programmer");
+        // Список предметов, которые надо сдавать для этой профессии
+        // Обратите внимание, что в классе Profession мы создаем пустой список
+        // чтобы не было NullPointerException
+        profession.getSubjectList().add(sbList.get(0));
+        profession.getSubjectList().add(sbList.get(2));
+        dao.addProfession(profession);
+        profession = new Profession();
+        profession.setProfessionName("Biologist");
+        profession.getSubjectList().add(sbList.get(1));
+        profession.getSubjectList().add(sbList.get(2));
+        // Получим профессию по ID и добавим еще один предмет для сдачи
+        Long id = dao.addProfession(profession);
+        profession = dao.getProfession(id);
+        profession.getSubjectList().add(sbList.get(0));
+        dao.updateProfession(profession);
+ 
+        // Смотрим список профессий
+        System.out.println();
+        System.out.println("List of PROFESSIONS");
+        System.out.println("-------------------");
+        List<Profession> prList = dao.findProfession();
+        for (Profession a : prList) {
+            System.out.println(a.getProfessionId() + ":" + a.getProfessionName());
+        }
+ 
+        System.out.println();
+        System.out.println("List of SUBJECTS");
+        System.out.println("----------------");
+        sbList = dao.findSubject();
+        // В списке вы увидите, что предметы теперь привязаны к профессиям - количество > 0
+        for (Subject a : sbList) {
+            System.out.println(a.getSubjectId() + ":" + a.getSubjectName() +
+                    ". Number of profession:" + a.getProfessionList().size());
+        }
+ 
+        // А теперь создадим новых абитуриентов
+        Applicant applicant = new Applicant();
+        applicant.setFirstName("John");
+        applicant.setMiddleName("M");
+        applicant.setLastName("Danny");
+        // Задаем профессию
+        applicant.setProfession(prList.get(0));
+        applicant.setEntranceYear(2009);
+        dao.addApplicant(applicant);
+        applicant = new Applicant();
+        applicant.setFirstName("Poul");
+        applicant.setMiddleName("H");
+        applicant.setLastName("Tride");
+        // Задаем профессию
+        applicant.setProfession(prList.get(1));
+        applicant.setEntranceYear(2009);
+        dao.addApplicant(applicant);
+ 
+        System.out.println();
+        System.out.println("List of APPLICANTS");
+        System.out.println("------------------");
+        List<Applicant> apList = dao.findApplicant();
+        for (Applicant a : apList) {
+            System.out.println(a.getFirstName().trim() + ":" + a.getLastName().trim() + " - " + a.getProfession().getProfessionName().trim());
+        // Если убрать комментарий, то получим сообщене об ошибке - коллекция не инициализирована
+        // Но еще можно посмотреть комментарий в StudentDAO (метод findApplicant()).
+        //System.out.println(a.getProfession().getSubjectList().size());
+        }
+ 
+    }
 }

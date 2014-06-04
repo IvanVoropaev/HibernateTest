@@ -11,8 +11,8 @@
         <property name="professionName" type="java.lang.String">
             <column name="PROFESSION_NAME" />
         </property>
-        <set name="subjectList" inverse="true" table="SPECIALITY_SUBJECT">
-        	<key column="PRIFESSION_ID"></key>
+        <set name="subjectList" table="SPECIALITY_SUBJECT">
+        	<key column="PROFESSION_ID"></key>
         	<many-to-many column="SUBJECT_ID" class="students.entity.Subject"></many-to-many>
         </set>
     </class>
