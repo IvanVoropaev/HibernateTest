@@ -2,16 +2,84 @@ package students.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/*
+ * @Entity - говорит о том, что данный класс представляет собой 
+ * сущность, которую надо сохранять в базе данных
+ * 
+ * @Table - показывает, какая таблица используется для хранения
+ */
+@Entity
+@Table(name="applicant")
 public class Applicant {
 	
+	/*
+	 * @Id - говорит о том, что данное поле является идентификатором
+	 * 
+     * @GeneratedValue - аннотация дает указание, что данная величина 
+     * будет генериться, причем указание strategy=GenerationType.IDENTITY 
+     * говорит о том, что значение будет создано с помощью базы данных – 
+     * точнее значение столбца, который связан с полем будет генерится с 
+     * помощью базы данных
+     * 
+     * @Column - достаточно очевидная аннотация для указания имени 
+     * столбца, с которым связано поле класса
+	 */
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="applicant_id")
 	private Long applicantId;
+	
 	//много-к-одному (много Applicant с одной и той же Profession)
+	/*
+	 * @ManyToOne - аннотация указывает, что поле указывает на другой 
+	 * класс, который связан с текущим классом связью многие-к-одному. 
+	 * Здесь также указывается правило каскада cascade={CascadeType.REFRESH} - 
+	 * в упрощенном виде оно гласит “что сделали с тобой, то сделай 
+	 * и со связью”. В нашем случае единственная операция, которая будет 
+	 * передаваться на класс Profession - это перечитывание. Все остальные 
+	 * операции не будут распространяться на связанный класс. Запись 
+	 * fetch=FetchType.LAZY указывает, что загрузка данного поля будет 
+	 * только в случае обращения к данному полю. Пока программа этого не 
+	 * делает, поле будет пустым.
+	 * 
+     * @JoinColumn - данная анотация по сути похожа на @Column. Разве что 
+     * она указывает, что колонка к тому же является связующей
+	 */
+	@ManyToOne(cascade={CascadeType.REFRESH}, fetch=FetchType.LAZY)
+	@JoinColumn(name="profession_id")
 	private Profession profession; 
-	//один-ко-многим (много ApplicantResult у одного Applicant)
+	
+	/*
+	 * @OneToMany - такая запись говорит о том, что поле служить для 
+	 * связи один-ко-многим (потому и список). Единственный параметр, 
+	 * который мы еще не рассмотрели - mappedBy=”applicant”. 
+	 * Он указывает имя поля в классе ApplicantResult, которое будет 
+	 * указывать на “родителя” – на класс Applicant
+	 */
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="applicant")
 	private List<ApplicantResult> applicantResultList;
+	
+	@Column(name="first_name")
 	private String firstName;
+	
+	@Column(name="middle_name")
 	private String middleName;
+	
+	@Column(name="last_name")
 	private String lastName;
+	
 	public String getLastName() {
 		return lastName;
 	}

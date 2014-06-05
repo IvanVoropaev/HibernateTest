@@ -29,9 +29,10 @@
 	    <!-- Drop and re-create the database schema on startup -->
 	    <!-- <property name="hbm2ddl.auto">update</property> -->
 	    
-	    <mapping resource="Profession.hbm.xml"/>
-	    <mapping resource="Applicant.hbm.xml"/>
-        <mapping resource="Subject.hbm.xml"/>
-        <mapping resource="ApplicantResult.hbm.xml"/>
+	    <!-- Mapping files -->
+	    <mapping class="students.entity.Profession"/>
+        <mapping class="students.entity.Applicant"/>
+        <mapping class="students.entity.Subject"/>
+        <mapping class="students.entity.ApplicantResult"/>
     </session-factory>
 </hibernate-configuration>

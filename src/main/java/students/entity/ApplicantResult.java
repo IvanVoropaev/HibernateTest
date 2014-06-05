@@ -1,10 +1,34 @@
 package students.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "applicant_result")
 public class ApplicantResult {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "applicant_result_id")
 	private Long applicantResultId;
+	
+	@ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@JoinColumn(name = "applicant_id")
 	private Applicant applicant;
+	
+	@ManyToOne(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@JoinColumn(name = "subject_id")
 	private Subject subject;
+	
+	@Column(name = "mark")
 	private Integer mark;
 	
 	public Long getApplicantResultId() {
